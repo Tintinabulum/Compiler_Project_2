@@ -4,8 +4,14 @@ public class Program {
     //Private variables
     private ArrayList<Declaration> decls;
     //Constructors
-    public Program(Declaration d){
+    public Program(){
         decls = new ArrayList();
+    }
+    public Program(Declaration d){
+        this(d,9);
+    }
+    public Program(Declaration d, int extra){
+        decls = new ArrayList(1+extra);
         decls.add(d);
     }
     public Program(Declaration[] d){

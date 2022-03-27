@@ -1,7 +1,6 @@
 package compiler;
 
-
-public class CMinusScannerException extends RuntimeException{
+public class CMinusScannerException extends CMinusException{
     public CMinusScannerException() {
         super();
     }
