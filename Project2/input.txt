@@ -1,0 +1,66 @@
+/* A test program for the CMinusScanner */
+
+int main(void){
+    int a = 20;
+    int b = 23;
+    int c = 8;
+    int sum = a + b;
+    int diff = a - b;
+    int prod = c * b;
+    int quot = b / a;
+    int x[25];
+    int i = 1;
+    int j = 1;
+
+    int fact = factorial(c);
+
+    /* return 1 if the sum function does not work properly */
+    if (sum != sum(a, b){
+        return 1;
+    }
+    /* return 2 if the difference function does not work properly */
+    if (diff != difference(a, b){
+        return 2;
+    }
+    /* return 3 if factorial had a negative input */
+    if (fact == -1){
+        return 3;
+    }
+
+    while (i <= 100){
+        i = i + j;
+        while (i >= 10){
+            j = j * 2;
+            i = i - 87;
+        }
+    }
+    return 0;
+}
+
+/* returns the sum of two integers */
+int sum(int a, int b){
+    sum = a + b;
+    return sum;
+}
+
+/* returns the difference between two integers */
+int difference(int a, int b){
+    diff = a - b;
+    return diff;
+}
+
+/* returns n factorial */
+int factorial(int n){
+
+    if (n == 0){
+        return 1;
+    }
+    /* return an error */
+    if (n < 0){
+        return -1;
+    }
+
+    return n * factorial(n - 1);
+}
+
+int sub(int a, int b){int sum=a-b;return sum;}
