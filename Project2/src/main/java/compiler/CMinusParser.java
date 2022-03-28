@@ -169,6 +169,105 @@ public class CMinusParser implements Parser{
            return new Param(id);
     }
     private CompoundStatement parseCompoundStatement(){
+        Token nextToken = nextToken();
+        TokenType type = nextToken.getType();
+        if(type!=TokenType.BEGBRA)
+            throw new CMinusParserException("Invalid semantics in CompoundStatement:\nGot "+type.toString()+" instead of {");
+        nextToken = viewNext();
+        type = nextToken.getType();
+        CompoundStatement ret = new CompoundStatement();
+        while(type==TokenType.INT){
+            scan.getNextToken();
+            nextToken = nextToken();
+            type = nextToken.getType();
+            if(type!=TokenType.ID)
+                throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ID");
+            String id = (String)(nextToken.getData());
+            nextToken = nextToken();
+            type = nextToken.getType();
+            if(type==TokenType.BEGSBRA){
+                nextToken = nextToken();
+                type = nextToken.getType();
+                if(type!=TokenType.NUM)
+                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of NUM");
+                int num = (Integer)(nextToken.getData());
+                nextToken = nextToken();
+                type = nextToken.getType();
+                if(type!=TokenType.ENDSBRA)
+                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ]");
+                ret.addVarDecl(new VarDecl(id, num));
+                nextToken = nextToken();
+                type = nextToken.getType();
+            }else ret.addVarDecl(new VarDecl(id));
+            if(type!=TokenType.SEMICOLON)
+                throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ;");
+            nextToken = viewNext();
+            type = nextToken.getType();
+        }
+        //Statement List
+        while(type!=TokenType.ENDBRA){
+            if(type!=TokenType.BEGBRA && type!=TokenType.IF && type!=TokenType.WHILE &&
+                    type!=TokenType.RETURN && type!=TokenType.SEMICOLON && type!=TokenType.ID
+                    && type!=TokenType.NUM && type!=TokenType.BEGPAR)
+                throw new CMinusParserException("Invalid semantics in StatementList:\nGot "+type.toString()+" instead of {, IF, WHILE, RETURN, ;, ID, NUM, or (");
+            ret.addStatement(parseStatement());
+            nextToken = viewNext();
+            type = nextToken.getType();
+        }
+        //Consume the }
+        scan.getNextToken();
+        return ret;
+    }
+    private Statement parseStatement(){
+        Token nextToken = viewNext();
+        TokenType type = nextToken.getType();
+        switch(type){
+                case BEGBRA: return parseCompoundStatement();
+                case IF: return parseSelectionStatement();
+                case WHILE: return parseIterationStatement();
+                case RETURN: return parseReturnStatement();
+                case SEMICOLON:
+                case ID:
+                case NUM:
+                case BEGPAR:
+                    return parseExpressionStatement();
+                default:
+                    throw new CMinusParserException("Invalid semantics in Statement:\nGot "+type.toString()+" instead of {, IF, WHILE, RETURN, ;, ID, NUM, or (");                    
+            }
+    }
+    private SelectionStatement parseSelectionStatement(){
+        Token nextToken = nextToken();
+        TokenType type = nextToken.getType();
+        if(type!=TokenType.IF)
+            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of IF");
+        nextToken = nextToken();
+        type = nextToken.getType();
+        if(type!=TokenType.BEGPAR)
+            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of (");
+        Expression con = parseExpression();
+        nextToken = nextToken();
+        type = nextToken.getType();
+        if(type!=TokenType.ENDPAR)
+            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of )");
+        Statement ifS = parseStatement();
+        nextToken = viewNext();
+        type = nextToken.getType();
+        if(type==TokenType.ELSE){
+            scan.getNextToken();
+            return new SelectionStatement(con, ifS, parseStatement());
+        }
+        return new SelectionStatement(con, ifS);
+    }
+    private IterationStatement parseIterationStatement(){
+        return null;
+    }
+    private ReturnStatement parseReturnStatement(){
+        return null;
+    }
+    private ExpressionStatement parseExpressionStatement(){
+        return null;
+    }
+    private Expression parseExpression(){
         return null;
     }
 }

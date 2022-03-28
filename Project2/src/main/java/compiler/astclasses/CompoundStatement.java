@@ -8,7 +8,7 @@ public class CompoundStatement implements Statement{
     private ArrayList<Statement> stateList;
     //Constructor
     public CompoundStatement(){
-        this(new ArrayList(1),new ArrayList(1));
+        this(new ArrayList(5),new ArrayList(20));
     }
     public CompoundStatement(ArrayList<VarDecl> decls, ArrayList<Statement> statements){
         if(decls==null) decls = new ArrayList(1);
