@@ -159,10 +159,42 @@ public class CMinusParser implements Parser{
                 throw new CMinusParserException("Invalid semantics in Param-list:\nGot "+type.toString()+" instead of INT or VOID");
         }
         CompoundStatement cs = parseCompoundStatement();
-        return new FunDecl(isVoid, id, p, cs);
+        if(p==null)
+            return new FunDecl(isVoid, id, cs);
+        return new FunDecl(isVoid, id, (Param[])(p.toArray()), cs);
     }
     private Param parseParam(){
-           return null; 
+           Token nextToken = scan.getNextToken();
+           TokenType type = nextToken.getType();
+           if(type==TokenType.ERROR)
+               throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
+           if(type!=TokenType.INT)
+               throw new CMinusParserException("Invalid semantics in Param:\nGot "+type.toString()+" instead of INT");
+           nextToken = scan.getNextToken();
+           type = nextToken.getType();
+           String id;
+           switch(type){
+               case ID:
+                   id = (String)(nextToken.getData());
+                   break;
+               case ERROR:
+                   throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
+               default:
+                   throw new CMinusParserException("Invalid semantics in Param:\nGot "+type.toString()+" instead of ID");
+           }
+           nextToken = scan.viewNextToken();
+           type = nextToken.getType();
+           if(type==TokenType.BEGSBRA){
+               scan.getNextToken();
+               nextToken = scan.getNextToken();
+               type = nextToken.getType();
+               if(type==TokenType.ERROR)
+                   throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
+               if(type!=TokenType.ENDSBRA)
+                   throw new CMinusParserException("Invalid semantics in Param:\nGot "+type.toString()+" instead of ]");
+               return new Param(id, true);
+           }
+           return new Param(id);
     }
     private CompoundStatement parseCompoundStatement(){
         return null;
