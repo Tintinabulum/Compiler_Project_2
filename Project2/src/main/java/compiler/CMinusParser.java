@@ -27,30 +27,41 @@ public class CMinusParser implements Parser{
     public void parse(){
         root = parseProgram();
     }
+    private Token nextToken(){
+        Token t = scan.getNextToken();
+        if(t.getType()==TokenType.ERROR)
+            throw new CMinusScannerException("Invalid syntax: "+(String)(t.getData()));
+        return t;
+    }
+    private Token viewNext(){
+        Token t = scan.viewNextToken();
+        if(t.getType()==TokenType.ERROR)
+            throw new CMinusScannerException("Invalid syntax: "+(String)(t.getData()));
+        return t;
+    }
     private Program parseProgram(){
         Declaration d = parseDeclaration();
         Program p = new Program(d);
-        Token nextToken = scan.viewNextToken();
+        Token nextToken = viewNext();
         TokenType type = nextToken.getType();
         while(type!=TokenType.EOF){
+            //Look ahead check here
             d = parseDeclaration();
             p.addDeclaration(d);
-            nextToken = scan.viewNextToken();
+            nextToken = viewNext();
             type = nextToken.getType();
         }
-        if(type==TokenType.ERROR)
-            throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
         return p;
     }
     private Declaration parseDeclaration(){
-        Token nextToken = scan.getNextToken();
+        Token nextToken = nextToken();
         TokenType type = nextToken.getType();
         boolean isVoid = false;
         switch(type){
             case VOID:
                 isVoid = true;
             case INT:
-                nextToken = scan.getNextToken();
+                nextToken = nextToken();
                 type = nextToken.getType();
                 switch(type){
                     case ID:
@@ -58,56 +69,39 @@ public class CMinusParser implements Parser{
                         if(isVoid)
                             return parseFunDecl(true, data);
                         return parseDeclarationPrime(data);
-                    case ERROR:
-                        throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
                     default:
                         throw new CMinusParserException("Invalid semantics in Declaration:\nGot "+type.toString()+" instead of ID");
                 }
-            case ERROR:
-                throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
             default:
                 throw new CMinusParserException("Invalid semantics in Declaration:\nGot "+type.toString()+" instead of VOID or INT");
         }
     }
     private Declaration parseDeclarationPrime(String id){
-        Token nextToken = scan.viewNextToken();
+        Token nextToken = viewNext();
         TokenType type = nextToken.getType();
         switch(type){
             case BEGSBRA:
                 //Consume the [
                 scan.getNextToken();
-                nextToken = scan.getNextToken();
+                nextToken = nextToken();
                 type = nextToken.getType();
                 int val;
                 switch(type){
                     case NUM:
                         val = (Integer)(nextToken.getData());
                         break;
-                    case ERROR:
-                        throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
                     default:
                         throw new CMinusParserException("Invalid semantics in Variable Declaration:\nGot "+type.toString()+" instead of NUM");
                 }
-                nextToken = scan.getNextToken();
+                nextToken = nextToken();
                 type = nextToken.getType();
-                switch(type){
-                    case ENDSBRA:
-                        break;
-                    case ERROR:
-                        throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
-                    default:
-                        throw new CMinusParserException("Invalid semantics in Variable Declaration:\nGot "+type.toString()+" instead of ]");
-                }
-                nextToken = scan.getNextToken();
+                if(type!=TokenType.ENDSBRA)
+                   throw new CMinusParserException("Invalid semantics in Variable Declaration:\nGot "+type.toString()+" instead of ]");
+                nextToken = nextToken();
                 type = nextToken.getType();
-                switch(type){
-                    case SEMICOLON:
-                        return new VarDecl(id,val);
-                    case ERROR:
-                        throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
-                    default:
-                        throw new CMinusParserException("Invalid semantics in Variable Declaration:\nGot "+type.toString()+" instead of ;");
-                }
+                if(type==TokenType.SEMICOLON)
+                    return new VarDecl(id,val);
+                throw new CMinusParserException("Invalid semantics in Variable Declaration:\nGot "+type.toString()+" instead of ;");
             case SEMICOLON:
                 //Consume the ;
                 scan.getNextToken();
@@ -117,28 +111,20 @@ public class CMinusParser implements Parser{
         }
     }
     private FunDecl parseFunDecl(boolean isVoid, String id){
-        Token nextToken = scan.getNextToken();
+        Token nextToken = nextToken();
         TokenType type = nextToken.getType();
-        switch(type){
-            case BEGPAR:
-                break;
-            case ERROR:
-                throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
-            default:
-                throw new CMinusParserException("Invalid semantics in Function Declaration:\nGot "+type.toString()+" instead of (");
-        }
+        if(type!=TokenType.BEGPAR)
+            throw new CMinusParserException("Invalid semantics in Function Declaration:\nGot "+type.toString()+" instead of (");
         ArrayList<Param> p = null;
-        nextToken = scan.viewNextToken();
+        nextToken = viewNext();
         type = nextToken.getType();
         switch(type){
             case INT:
                 p = new ArrayList(3);
                 while(type!=TokenType.ENDPAR){
                     p.add(parseParam());
-                    nextToken = scan.getNextToken();
+                    nextToken = nextToken();
                     type = nextToken.getType();
-                    if(type==TokenType.ERROR)
-                        throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
                     if(type!=TokenType.COMMA && type!=TokenType.ENDPAR)
                         throw new CMinusParserException("Invalid semantics in Param-list:\nGot "+type.toString()+" instead of , or )");
                 }
@@ -146,15 +132,11 @@ public class CMinusParser implements Parser{
             case VOID:
                 //Consume VOID
                 scan.getNextToken();
-                nextToken = scan.getNextToken();
+                nextToken = nextToken();
                 type = nextToken.getType();
-                if(type==TokenType.ERROR)
-                    throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
                 if(type!=TokenType.ENDPAR)
                     throw new CMinusParserException("Invalid semantics in Param-list:\nGot "+type.toString()+" instead of )");
                 break;
-            case ERROR:
-                throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
             default:
                 throw new CMinusParserException("Invalid semantics in Param-list:\nGot "+type.toString()+" instead of INT or VOID");
         }
@@ -164,32 +146,22 @@ public class CMinusParser implements Parser{
         return new FunDecl(isVoid, id, (Param[])(p.toArray()), cs);
     }
     private Param parseParam(){
-           Token nextToken = scan.getNextToken();
+           Token nextToken = nextToken();
            TokenType type = nextToken.getType();
-           if(type==TokenType.ERROR)
-               throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
            if(type!=TokenType.INT)
                throw new CMinusParserException("Invalid semantics in Param:\nGot "+type.toString()+" instead of INT");
-           nextToken = scan.getNextToken();
+           nextToken = nextToken();
            type = nextToken.getType();
-           String id;
-           switch(type){
-               case ID:
-                   id = (String)(nextToken.getData());
-                   break;
-               case ERROR:
-                   throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
-               default:
-                   throw new CMinusParserException("Invalid semantics in Param:\nGot "+type.toString()+" instead of ID");
-           }
-           nextToken = scan.viewNextToken();
+           if(type!=TokenType.ID)
+               throw new CMinusParserException("Invalid semantics in Param:\nGot "+type.toString()+" instead of ID");
+           String id = (String)(nextToken.getData());
+           nextToken = viewNext();
            type = nextToken.getType();
            if(type==TokenType.BEGSBRA){
+               //Consume the [
                scan.getNextToken();
-               nextToken = scan.getNextToken();
+               nextToken = nextToken();
                type = nextToken.getType();
-               if(type==TokenType.ERROR)
-                   throw new CMinusScannerException("Invalid syntax: "+(String)(nextToken.getData()));
                if(type!=TokenType.ENDSBRA)
                    throw new CMinusParserException("Invalid semantics in Param:\nGot "+type.toString()+" instead of ]");
                return new Param(id, true);
