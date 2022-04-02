@@ -259,15 +259,46 @@ public class CMinusParser implements Parser{
         return new SelectionStatement(con, ifS);
     }
     private IterationStatement parseIterationStatement(){
-        return null;
+        Token nextToken = nextToken();
+        TokenType type = nextToken.getType();
+        if(type!=TokenType.WHILE)
+            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of WHILE");
+        nextToken = nextToken();
+        type = nextToken.getType();
+        if(type!=TokenType.BEGPAR)
+            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of (");
+        Expression con = parseExpression();
+        nextToken = nextToken();
+        type = nextToken.getType();
+        if(type!=TokenType.ENDPAR)
+            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of )");
+        Statement whileS = parseStatement();
+        return new IterationStatement(con ,whileS);
     }
     private ReturnStatement parseReturnStatement(){
-        return null;
+        Token nextToken = nextToken();
+        TokenType type = nextToken.getType();
+        if(type!=TokenType.RETURN)
+            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of RETURN");
+        /*nextToken = viewNext();
+        type = nextToken.getType();
+        how to parse possible [Expression]? */
+        return new ReturnStatement();
     }
     private ExpressionStatement parseExpressionStatement(){
+        Token nextToken = nextToken();
+        TokenType type = nextToken.getType();
         return null;
     }
     private Expression parseExpression(){
+        Token nextToken = nextToken();
+        TokenType type = nextToken.getType();
+        switch(type){
+            case ID:
+                nextToken = nextToken();
+                type = nextToken.getType();
+                // Expression exp' = parseExpressionPrime();
+        }
         return null;
     }
 }
