@@ -517,12 +517,12 @@ public class CMinusParser implements Parser{
                 
                 if(type == TokenType.BEGSBRA)
                 {
-                    Expression returnEXP = parseExpression();
                     nextToken = nextToken();
+                    Expression expr = parseExpression();
                     if(nextToken.getType() != TokenType.ENDSBRA)
                         throw new CMinusParserException("Invalid semantics in factor. Got " + nextToken.getType() + " instead of ']'");
                     
-                    return returnEXP;
+                    return new VarExpression((String)id.getData(), expr);
                 }
                 else if(type == TokenType.BEGPAR)
                 {
