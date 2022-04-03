@@ -437,13 +437,15 @@ public class CMinusParser implements Parser{
         nextToken = viewNext();
         type = nextToken.getType();
         while (type!=TokenType.ENDPAR){
-            if (type!=TokenType.COMMA)
-                 throw new CMinusParserException("Invalid semantics in parseCall:\nGot "+type.toString()+" instead of , or )");
-            //Consume the ,
-            scan.getNextToken();
             ce.addArgs(parseExpression());
             nextToken = viewNext();
             type = nextToken.getType();
+
+            if (type != TokenType.COMMA && type != TokenType.ENDPAR)
+                 throw new CMinusParserException("Invalid semantics in parseCall:\nGot "+type.toString()+" instead of , or )");
+            
+            //Consume the ,
+            scan.getNextToken();
         }
         //Consume the )
         scan.getNextToken();
