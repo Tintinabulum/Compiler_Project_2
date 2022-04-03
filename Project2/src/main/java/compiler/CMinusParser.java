@@ -529,13 +529,16 @@ public class CMinusParser implements Parser{
                     CallExpression returnExp = new CallExpression(new VarExpression((String)id.getData()));
                     nextToken = viewNext();
 
-                    do
+                    if(nextToken.getType() != TokenType.ENDPAR)
                     {
-                        returnExp.addArgs(parseExpression());
-                        nextToken = nextToken();
-                    } while(nextToken.getType() == TokenType.COMMA);
+                        do
+                        {
+                            returnExp.addArgs(parseExpression());
+                            nextToken = nextToken();
+                        } while(nextToken.getType() == TokenType.COMMA);
+                    }
 
-                    if(nextToken.getType() != TokenType.BEGPAR)
+                    if(nextToken.getType() != TokenType.ENDPAR)
                         throw new CMinusParserException("Invalid semantics in factor. Got " + nextToken.getType() + " instead of ')'");
 
                     return returnExp;
