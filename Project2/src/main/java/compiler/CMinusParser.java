@@ -24,7 +24,7 @@ public class CMinusParser implements Parser{
     }
     //Print
     public void printTree(){
-        if(root!=null)
+        if(root==null)
             parse();
         root.print();
     }
@@ -152,7 +152,11 @@ public class CMinusParser implements Parser{
         CompoundStatement cs = parseCompoundStatement();
         if(p==null)
             return new FunDecl(isVoid, id, cs);
-        return new FunDecl(isVoid, id, (Param[])(p.toArray()), cs);
+        Object[] a = p.toArray();
+        Param[] r = new Param[a.length];
+        for(int i=0;i<a.length;i++)
+            r[i] = (Param)a[i];
+        return new FunDecl(isVoid, id, r, cs);
     }
     private Param parseParam(){
            Token nextToken = nextToken();

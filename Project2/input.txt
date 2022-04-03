@@ -70,10 +70,10 @@ int factorial(int n){
     }
     /* return an error */
     if (n < 0){
-        return -1;
+        return 0-1;
     }
 
     return n * factorial(n - 1);
 }
 
-int sub(int a, int b){int s;int s=a-b;return s;}
+int sub(int a, int b){int s;s=a-b;return s;}
