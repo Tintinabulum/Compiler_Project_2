@@ -270,16 +270,16 @@ public class CMinusParser implements Parser{
         Token nextToken = nextToken();
         TokenType type = nextToken.getType();
         if(type!=TokenType.WHILE)
-            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of WHILE");
+            throw new CMinusParserException("Invalid semantics in IterationStatement:\nGot "+type.toString()+" instead of WHILE");
         nextToken = nextToken();
         type = nextToken.getType();
         if(type!=TokenType.BEGPAR)
-            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of (");
+            throw new CMinusParserException("Invalid semantics in IterationStatement:\nGot "+type.toString()+" instead of (");
         Expression con = parseExpression();
         nextToken = nextToken();
         type = nextToken.getType();
         if(type!=TokenType.ENDPAR)
-            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of )");
+            throw new CMinusParserException("Invalid semantics in IterationStatement:\nGot "+type.toString()+" instead of )");
         Statement whileS = parseStatement();
         return new IterationStatement(con ,whileS);
     }
@@ -287,7 +287,7 @@ public class CMinusParser implements Parser{
         Token nextToken = nextToken();
         TokenType type = nextToken.getType();
         if(type!=TokenType.RETURN)
-            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of RETURN");
+            throw new CMinusParserException("Invalid semantics in ReturnStatement:\nGot "+type.toString()+" instead of RETURN");
         nextToken = viewNext();
         type = nextToken.getType();
         if (type!=TokenType.SEMICOLON){
@@ -306,15 +306,200 @@ public class CMinusParser implements Parser{
         return new ExpressionStatement();
     }
     private Expression parseExpression(){
+        Expression exp;
         Token nextToken = nextToken();
         TokenType type = nextToken.getType();
         switch(type){
             case ID:
+                return parseExpressionPrime();
+            case NUM:
+                exp = new NumExpression();
+                nextToken = viewNext();
+                type = nextToken.getType();
+                switch(type){
+                case SEMICOLON:
+                    return exp;
+                case ADD:
+                    //consume +
+                    scan.getNextToken();
+                    //return new BinaryExpression(exp, "+", parseTerm());
+                case SUB:
+                    //consume -
+                    scan.getNextToken();
+                    //return new BinaryExpression(exp, "-", parseTerm());
+                case MULT:
+                    //consume *
+                    scan.getNextToken();
+                    //return new BinaryExpression(exp, "*", parseFactor());
+                case DIV:
+                    //consume /
+                    scan.getNextToken();
+                    //return new BinaryExpression(exp, "/", parseFactor());
+                default:
+                    return null; // replace with line below when BinaryExp and parseAddExp are made
+                    //return new BinaryExpression(exp, parseRelop(), parseAdditiveExpression()); 
+                }
+            case BEGPAR:
+                exp = parseExpression();
                 nextToken = nextToken();
                 type = nextToken.getType();
-                // Expression exp' = parseExpressionPrime();
+                if(type!=TokenType.ENDPAR)
+                    throw new CMinusParserException("Invalid semantics in parseExpression:\nGot "+type.toString()+" instead of )");
+                nextToken = viewNext();
+                type = nextToken.getType();
+                switch(type){
+                    case SEMICOLON:
+                        return exp;
+                    case ADD:
+                        //consume +
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "+", parseTerm());
+                    case SUB:
+                        //consume -
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "-", parseTerm());
+                    case MULT:
+                        //consume *
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "*", parseFactor());
+                    case DIV:
+                        //consume /
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "/", parseFactor());
+                    default:
+                        return null; // replace with line below when BinaryExp and parseAddExp are made
+                        //return new BinaryExpression(exp, parseRelop(), parseAdditiveExpression()); 
+                }
+            default:
+                throw new CMinusParserException("Invalid semantics in parseExpression:\nGot "+type.toString()+" instead of ID, NUM, or (");
         }
-        return null;
     }
-    
+    private Expression parseExpressionPrime(){
+        Token nextToken = nextToken();
+        TokenType type = nextToken.getType();
+        Expression exp = new NumExpression();  // replace this with line below when VarExp is made
+        //Expression exp = new VarExpression();
+        switch(type){
+            case EQUAL:
+                exp = new NumExpression(); // replace this with line below when VarExp is made
+                //exp = new VarExpression();
+                return (new AssignExpression(exp, parseExpression()));
+            case BEGSBRA:
+                exp = new NumExpression(); // replace this with line below when VarExp is made
+                //exp = new VarExpression(exp2);
+                Expression exp2 = parseExpression();
+                nextToken = nextToken();
+                type = nextToken.getType();
+                if (type!=TokenType.ENDSBRA)
+                    throw new CMinusParserException("Invalid semantics in parseExpressionPrime:\nGot "+type.toString()+" instead of ]");
+                nextToken = viewNext();
+                type = nextToken.getType();
+                //parseExpressionPrimePrime
+                switch(type){
+                    case ASSIGN:
+                        //consume =
+                        scan.getNextToken();
+                        return new AssignExpression(exp, parseExpression());
+                    case SEMICOLON:
+                        return exp;
+                    case ADD:
+                        //consume +
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "+", parseTerm());
+                    case SUB:
+                        //consume -
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "-", parseTerm());
+                    case MULT:
+                        //consume *
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "*", parseFactor());
+                    case DIV:
+                        //consume /
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "/", parseFactor());
+                    default:
+                        return null; // replace with line below when BinaryExp and parseAddExp are made
+                        //return new BinaryExpression(exp, parseRelop(), parseAdditiveExpression()); 
+                }
+            case BEGPAR:
+                exp = new CallExpression(new NumExpression());
+                //exp = new CallExpression(new VarExpression());
+                nextToken = nextToken();
+                type = nextToken.getType();
+                while (type!=TokenType.ENDPAR){
+                    ((CallExpression) exp).addArgs(parseExpression());
+                   nextToken = nextToken();
+                   type = nextToken.getType();
+                   if (type!=TokenType.COMMA && type!=TokenType.ENDPAR)
+                       throw new CMinusParserException("Invalid semantics in parseExpressionPrime:\nGot "+type.toString()+" instead of , or ]");
+                }
+                nextToken = viewNext();
+                type = nextToken.getType();
+                switch(type){
+                    case SEMICOLON:
+                        return exp;
+                    case ADD:
+                        //consume +
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "+", parseTerm());
+                    case SUB:
+                        //consume -
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "-", parseTerm());
+                    case MULT:
+                        //consume *
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "*", parseFactor());
+                    case DIV:
+                        //consume /
+                        scan.getNextToken();
+                        //return new BinaryExpression(exp, "/", parseFactor());
+                    default:
+                        return null; // replace with line below when BinaryExp and parseAddExp are made
+                        //return new BinaryExpression(exp, parseRelop(), parseAdditiveExpression()); 
+                }
+            case SEMICOLON:
+                return exp;
+            case ADD:
+                //consume +
+                scan.getNextToken();
+                //return new BinaryExpression(exp, "+", parseTerm());
+            case SUB:
+                //consume -
+                scan.getNextToken();
+                //return new BinaryExpression(exp, "-", parseTerm());
+            case MULT:
+                //consume *
+                scan.getNextToken();
+                //return new BinaryExpression(exp, "*", parseFactor());
+            case DIV:
+                //consume /
+                scan.getNextToken();
+                //return new BinaryExpression(exp, "/", parseFactor());
+            default:
+                return null; // replace with line below when BinaryExp and parseAddExp are made
+                //return new BinaryExpression(exp, parseRelop(), parseAdditiveExpression()); 
+        }
+    }
+    private String parseRelop(){
+        Token nextToken = nextToken();
+        TokenType type = nextToken.getType();
+        switch(type){
+            case LESSEQU:
+                return "<=";
+            case LESS:
+                return "<";
+            case GRE:
+                return ">";
+            case GREEQU:
+                return ">=";
+            case EQUAL:
+                return "==";
+            case NOTEQUAL:
+                return "!=";
+            default :
+                throw new CMinusParserException("Invalid semantics in parseExpressionPrime:\nGot "+type.toString()+" instead of <=, <, >, >=, ==, or !=");
+        }
+    }
 }

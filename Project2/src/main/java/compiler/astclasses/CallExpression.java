@@ -6,7 +6,7 @@ public class CallExpression implements Expression{
     //private VarExpression varExp;
     private ArrayList<Expression> args;
     //private ArrayList<VarExpression> args;
-    public CallExpression(Expression funName){
+    public CallExpression(/*Var*/Expression funName){
         varExp = funName;
         args = new ArrayList<Expression>();
     }
