@@ -303,7 +303,7 @@ public class CMinusParser implements Parser{
             return new ExpressionStatement(parseExpression());
         //consume ;
         scan.getNextToken();
-        return null;
+        return new ExpressionStatement();
     }
     private Expression parseExpression(){
         Token nextToken = nextToken();
