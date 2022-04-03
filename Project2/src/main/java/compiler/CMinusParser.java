@@ -552,7 +552,7 @@ public class CMinusParser implements Parser{
         case ID: //Handle factor'
             {
                 Token id = nextToken;
-                nextToken = nextToken();
+                nextToken = viewNext();
                 TokenType type = nextToken.getType();
                 
                 if(type == TokenType.BEGSBRA)
@@ -565,24 +565,7 @@ public class CMinusParser implements Parser{
                     return new VarExpression((String)id.getData(), expr);
                 }
                 else if(type == TokenType.BEGPAR)
-                {
-                    CallExpression returnExp = new CallExpression(new VarExpression((String)id.getData()));
-                    nextToken = viewNext();
-
-                    if(nextToken.getType() != TokenType.ENDPAR)
-                    {
-                        do
-                        {
-                            returnExp.addArgs(parseExpression());
-                            nextToken = nextToken();
-                        } while(nextToken.getType() == TokenType.COMMA);
-                    }
-
-                    if(nextToken.getType() != TokenType.ENDPAR)
-                        throw new CMinusParserException("Invalid semantics in factor. Got " + nextToken.getType() + " instead of ')'");
-
-                    return returnExp;
-                }
+                    return parseCall(new VarExpression((String)id.getData()));
 
                 return new VarExpression((String)id.getData());
             }
