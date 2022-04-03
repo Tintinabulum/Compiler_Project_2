@@ -129,7 +129,7 @@ public class CMinusParser implements Parser{
         type = nextToken.getType();
         switch(type){
             case INT:
-                p = new ArrayList(3);
+                p = new ArrayList<Param>(3);
                 while(type!=TokenType.ENDPAR){
                     p.add(parseParam());
                     nextToken = nextToken();
@@ -447,8 +447,6 @@ public class CMinusParser implements Parser{
             //Consume the ,
             scan.getNextToken();
         }
-        //Consume the )
-        scan.getNextToken();
         return ce;
     }
     private BinaryExpression parseAdditiveExpression()

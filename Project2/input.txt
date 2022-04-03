@@ -28,15 +28,15 @@ int main(void){
     fact = factorial(c);
 
     /* return 1 if the sum function does not work properly */
-    if (sum != sum(a, b){
+    if (sum != sum(a, b)){
         return 1;
     }
     /* return 2 if the difference function does not work properly */
-    if (diff != difference(a, b){
+    if (diff != difference(a, b)){
         return 2;
     }
     /* return 3 if factorial had a negative input */
-    if (fact == -1){
+    if (fact == 0-1){
         return 3;
     }
 
