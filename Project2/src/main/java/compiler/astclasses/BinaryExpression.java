@@ -26,8 +26,10 @@ public class BinaryExpression implements Expression
     public void print()
     {
         leftExp.print();
-        System.out.print(" " + op + " ");
-        rightExp.print();
-        System.out.println(';');
+        if(op != null && rightExp != null)
+        {
+            System.out.print(" " + op + " ");
+            rightExp.print();
+        }
     }   
 }
