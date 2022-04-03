@@ -313,7 +313,7 @@ public class CMinusParser implements Parser{
             case ID:
                 return parseExpressionPrime();
             case NUM:
-                exp = new NumExpression();
+                exp = new NumExpression((int)nextToken.getData());
                 nextToken = viewNext();
                 type = nextToken.getType();
                 switch(type){
@@ -518,7 +518,7 @@ public class CMinusParser implements Parser{
                 return returnExp;
             }
         case NUM:
-            return new NumExpression();
+            return new NumExpression((int)nextToken.getData());
 
         case ID: //Handle factor'
             {
