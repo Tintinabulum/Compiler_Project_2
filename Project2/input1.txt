@@ -1,0 +1,60 @@
+void f(void){
+	int i;
+	i;
+	;
+	7;
+	i=7;
+}
+void u(int i){
+	int n;
+	n = i;
+	{
+		int t;
+		t = n+i;
+	}
+	n = n-i;
+}
+void n(int i,int n, int t){
+	if(i<=n)
+		if(i<t)
+			if(n>t) i=i+n*t;
+			else i=n=t/n*i;
+		else if(i+n>=t){
+			i=(i+n)/t;
+			n=i+n*t*i+t;
+			t=i*n+t+i*n;
+		}
+		else i=n=t=21;
+	while(i==n){
+		i=(n+t)*(t+n);
+		n=i==t;
+		t=t+1;
+		if(i!=t) return;
+	}
+}
+
+int d[3];
+int e;
+
+int c(int i){
+	int n;
+	int t[5];
+	d[0] = i;
+	d[1] = i+e;
+	n = d[2]+i;
+	i = 0;
+	while(i<5){
+		t[0] = d[n-e];
+		i = i+1;
+	}
+	return (t[0]/t[1]*t[2]-t[3]+t[4]);
+}
+int i(int n, int t){
+	n = c(7);
+	t = c(21);
+	n = c(t) + c(n);
+	t = c(n) + 1;
+	n = 1 + c(t);
+	t = c(t+n);
+	return n-t;
+}

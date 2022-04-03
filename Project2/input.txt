@@ -1,4 +1,4 @@
-/* A test program for the CMinusScanner */
+/* A test program for the CMinusScanner and CMinusParser */
 
 void voidFun(void){
 	int x;

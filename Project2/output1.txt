@@ -1,0 +1,60 @@
+void f(void){
+	int i;
+	i;
+	;
+	7;
+	i = 7;
+}
+
+void u(int i){
+	int n;
+	n = i;
+	{
+	int t;
+	t = n ADD i;
+}
+	n = n SUB i;
+}
+
+void n(int i, int n, int n){
+	if(i LESSEQU n) if(i LESS t) if(n GRE t) i = i ADD n MULT t;
+			else i = n = t DIV n MULT i;
+		else if(i ADD n GREEQU t) {
+				i = i ADD n DIV t;
+				n = i ADD n MULT t MULT i ADD t;
+				t = i MULT n ADD t ADD i MULT n;
+			}
+			else i = n = t = 21;
+	while(i EQUAL n) {
+		i = n ADD t MULT t ADD n;
+		n = i EQUAL t;
+		t = t ADD 1;
+		if(i NOTEQUAL t) return;
+	}
+}
+
+int d[3];
+int e;
+int c(int i){
+	int n;
+	int t[5];
+	d[0] = i;
+	d[1] = i ADD e;
+	n = d[2] ADD i;
+	i = 0;
+	while(i LESS 5) {
+		t[0] = d[n SUB e];
+		i = i ADD 1;
+	}
+	return t[0] DIV t[1] MULT t[2] SUB t[3] ADD t[4];
+}
+
+int i(int n, int t){
+	n = c(7);
+	t = c(21);
+	n = c(t) ADD c(n);
+	t = c(n) ADD 1;
+	n = 1 ADD c(t);
+	t = c(t ADD n);
+	return n SUB t;
+}

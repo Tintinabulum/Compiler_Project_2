@@ -1,256 +1,72 @@
-INT
-ID : main
-BEGPAR
-VOID
-ENDPAR
-BEGBRA
-INT
-ID : a
-ASSIGN
-NUM : 20
-SEMICOLON
-INT
-ID : b
-ASSIGN
-NUM : 23
-SEMICOLON
-INT
-ID : c
-ASSIGN
-NUM : 8
-SEMICOLON
-INT
-ID : sum
-ASSIGN
-ID : a
-ADD
-ID : b
-SEMICOLON
-INT
-ID : diff
-ASSIGN
-ID : a
-SUB
-ID : b
-SEMICOLON
-INT
-ID : prod
-ASSIGN
-ID : c
-MULT
-ID : b
-SEMICOLON
-INT
-ID : quot
-ASSIGN
-ID : b
-DIV
-ID : a
-SEMICOLON
-INT
-ID : x
-BEGSBRA
-NUM : 25
-ENDSBRA
-SEMICOLON
-INT
-ID : i
-ASSIGN
-NUM : 1
-SEMICOLON
-INT
-ID : j
-ASSIGN
-NUM : 1
-SEMICOLON
-INT
-ID : fact
-ASSIGN
-ID : factorial
-BEGPAR
-ID : c
-ENDPAR
-SEMICOLON
-IF
-BEGPAR
-ID : sum
-NOTEQUAL
-ID : sum
-BEGPAR
-ID : a
-COMMA
-ID : b
-ENDPAR
-BEGBRA
-RETURN
-NUM : 1
-SEMICOLON
-ENDBRA
-IF
-BEGPAR
-ID : diff
-NOTEQUAL
-ID : difference
-BEGPAR
-ID : a
-COMMA
-ID : b
-ENDPAR
-BEGBRA
-RETURN
-NUM : 2
-SEMICOLON
-ENDBRA
-IF
-BEGPAR
-ID : fact
-EQUAL
-SUB
-NUM : 1
-ENDPAR
-BEGBRA
-RETURN
-NUM : 3
-SEMICOLON
-ENDBRA
-WHILE
-BEGPAR
-ID : i
-LESSEQU
-NUM : 100
-ENDPAR
-BEGBRA
-ID : i
-ASSIGN
-ID : i
-ADD
-ID : j
-SEMICOLON
-WHILE
-BEGPAR
-ID : i
-GREEQU
-NUM : 10
-ENDPAR
-BEGBRA
-ID : j
-ASSIGN
-ID : j
-MULT
-NUM : 2
-SEMICOLON
-ID : i
-ASSIGN
-ID : i
-SUB
-NUM : 87
-SEMICOLON
-ENDBRA
-ENDBRA
-RETURN
-NUM : 0
-SEMICOLON
-ENDBRA
-INT
-ID : sum
-BEGPAR
-INT
-ID : a
-COMMA
-INT
-ID : b
-ENDPAR
-BEGBRA
-ID : sum
-ASSIGN
-ID : a
-ADD
-ID : b
-SEMICOLON
-RETURN
-ID : sum
-SEMICOLON
-ENDBRA
-INT
-ID : difference
-BEGPAR
-INT
-ID : a
-COMMA
-INT
-ID : b
-ENDPAR
-BEGBRA
-ID : diff
-ASSIGN
-ID : a
-SUB
-ID : b
-SEMICOLON
-RETURN
-ID : diff
-SEMICOLON
-ENDBRA
-INT
-ID : factorial
-BEGPAR
-INT
-ID : n
-ENDPAR
-BEGBRA
-IF
-BEGPAR
-ID : n
-EQUAL
-NUM : 0
-ENDPAR
-BEGBRA
-RETURN
-NUM : 1
-SEMICOLON
-ENDBRA
-IF
-BEGPAR
-ID : n
-LESS
-NUM : 0
-ENDPAR
-BEGBRA
-RETURN
-SUB
-NUM : 1
-SEMICOLON
-ENDBRA
-RETURN
-ID : n
-MULT
-ID : factorial
-BEGPAR
-ID : n
-SUB
-NUM : 1
-ENDPAR
-SEMICOLON
-ENDBRA
-INT
-ID : sub
-BEGPAR
-INT
-ID : a
-COMMA
-INT
-ID : b
-ENDPAR
-BEGBRA
-INT
-ID : sum
-ASSIGN
-ID : a
-SUB
-ID : b
-SEMICOLON
-RETURN
-ID : sum
-SEMICOLON
-ENDBRA
-EOF
+void voidFun(void){
+	int x;
+	x = x ADD x MULT x MULT x ADD x;
+}
+
+int main(void){
+	int a;
+	int b;
+	int c;
+	int sum;
+	int diff;
+	int prod;
+	int quot;
+	int x[25];
+	int i;
+	int j;
+	int fact;
+	a = 20;
+	b = 23;
+	c = 8;
+	sum = a ADD b;
+	diff = a SUB b;
+	prod = c MULT b;
+	quot = b DIV a;
+	sum = diff ADD prod ADD quot;
+	a = b SUB c MULT sum DIV diff ADD prod;
+	i = 1;
+	j = 1;
+	fact = factorial(c);
+	if(sum NOTEQUAL sum(a, b)) {
+		return 1;
+	}
+	if(diff NOTEQUAL difference(a, b)) {
+		return;
+	}
+	else if(i LESS j) return 2;
+	if(fact EQUAL 0 SUB 1) return 3;
+	while(i LESSEQU 100) {
+		i = i ADD j;
+		while(i GREEQU 10) {
+			j = j MULT 2;
+			i = i SUB 87;
+		}
+	}
+	return 0;
+}
+
+int sum(int a, int b){
+	return a ADD b;
+}
+
+int difference(int a, int b){
+	int diff;
+	diff = a SUB b;
+	return diff;
+}
+
+int factorial(int n){
+	if(n EQUAL 0) {
+		return 1;
+	}
+	if(n LESS 0) {
+		return 0 SUB 1;
+	}
+	return n MULT factorial(n SUB 1);
+}
+
+int sub(int a, int b){
+	int s;
+	s = a SUB b;
+	return s;
+}
