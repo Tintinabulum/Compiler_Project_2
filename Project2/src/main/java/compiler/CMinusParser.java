@@ -176,31 +176,11 @@ public class CMinusParser implements Parser{
         nextToken = viewNext();
         type = nextToken.getType();
         CompoundStatement ret = new CompoundStatement();
+        //ParseLocalDecl
         while(type==TokenType.INT){
+            //consume INT
             scan.getNextToken();
-            nextToken = nextToken();
-            type = nextToken.getType();
-            if(type!=TokenType.ID)
-                throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ID");
-            String id = (String)(nextToken.getData());
-            nextToken = nextToken();
-            type = nextToken.getType();
-            if(type==TokenType.BEGSBRA){
-                nextToken = nextToken();
-                type = nextToken.getType();
-                if(type!=TokenType.NUM)
-                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of NUM");
-                int num = (Integer)(nextToken.getData());
-                nextToken = nextToken();
-                type = nextToken.getType();
-                if(type!=TokenType.ENDSBRA)
-                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ]");
-                ret.addVarDecl(new VarDecl(id, num));
-                nextToken = nextToken();
-                type = nextToken.getType();
-            }else ret.addVarDecl(new VarDecl(id));
-            if(type!=TokenType.SEMICOLON)
-                throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ;");
+            ret.addVarDecl(parseLocalDeclaration());
             nextToken = viewNext();
             type = nextToken.getType();
         }
@@ -217,6 +197,34 @@ public class CMinusParser implements Parser{
         //Consume the }
         scan.getNextToken();
         return ret;
+    }
+    private VarDecl parseLocalDeclaration (){
+        Token nextToken = nextToken();
+        TokenType type = nextToken.getType();
+            if(type!=TokenType.ID)
+                throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ID");
+            String id = (String)(nextToken.getData());
+            nextToken = nextToken();
+            type = nextToken.getType();
+            if(type==TokenType.BEGSBRA){
+                nextToken = nextToken();
+                type = nextToken.getType();
+                if(type!=TokenType.NUM)
+                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of NUM");
+                int num = (Integer)(nextToken.getData());
+                nextToken = nextToken();
+                type = nextToken.getType();
+                if(type!=TokenType.ENDSBRA)
+                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ]");
+                nextToken = nextToken();
+                type = nextToken.getType();
+                if(type!=TokenType.SEMICOLON)
+                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ;");
+                return new VarDecl(id, num);
+            }
+            if(type!=TokenType.SEMICOLON)
+                throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ;");
+            return new VarDecl(id);
     }
     private Statement parseStatement(){
         Token nextToken = viewNext();
@@ -280,14 +288,21 @@ public class CMinusParser implements Parser{
         TokenType type = nextToken.getType();
         if(type!=TokenType.RETURN)
             throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of RETURN");
-        /*nextToken = viewNext();
+        nextToken = viewNext();
         type = nextToken.getType();
-        how to parse possible [Expression]? */
+        if (type!=TokenType.SEMICOLON){
+            Expression retVal = parseExpression();
+            return new ReturnStatement(retVal);
+        }
         return new ReturnStatement();
     }
     private ExpressionStatement parseExpressionStatement(){
-        Token nextToken = nextToken();
+        Token nextToken = viewNext();
         TokenType type = nextToken.getType();
+        if (type!=TokenType.SEMICOLON)
+            return new ExpressionStatement(parseExpression());
+        //consume ;
+        scan.getNextToken();
         return null;
     }
     private Expression parseExpression(){
@@ -301,4 +316,5 @@ public class CMinusParser implements Parser{
         }
         return null;
     }
+    
 }
