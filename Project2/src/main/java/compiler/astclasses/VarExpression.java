@@ -3,23 +3,28 @@ package compiler.astclasses;
 public class VarExpression implements Expression 
 {
     String id;
+    Expression arrayselect;
+
+    public VarExpression(String idName, Expression as)
+    {
+        id = idName;
+        arrayselect = as;
+    }
 
     public VarExpression(String idName)
     {
-        id = idName;
-    }
-    
-    public VarExpression()
-    {
-        this(null);
+        this(idName, null);
     }
     
     @Override
     public void print()
     {
-        if(id != null)
+        System.out.print(id);
+        if(arrayselect != null)
         {
-            System.out.print(id);
+            System.out.print('[');
+            arrayselect.print();
+            System.out.print(']');
         }
     }
     
