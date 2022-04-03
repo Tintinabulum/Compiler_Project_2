@@ -476,7 +476,8 @@ public class CMinusParser implements Parser{
         nextToken = nextToken();
         type = nextToken.getType();
         if(type != TokenType.ADD || type != TokenType.SUB)
-            throw new CMinusParserException("Invalid semantics in BinaryExpression (add)\n Got " + type);
+            throw new CMinusParserException("Invalid semantics in BinaryExpression (add)\n Got " + type + 
+                ". Expected '+' or '-'");
         
         BinaryExpression rhs = parseTerm();
 
