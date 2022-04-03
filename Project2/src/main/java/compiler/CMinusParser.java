@@ -318,40 +318,14 @@ public class CMinusParser implements Parser{
                 return parseExpressionPrime((String)(nextToken.getData()));
             case NUM:
                 exp = new NumExpression((int)nextToken.getData());
-                nextToken = viewNext();
-                type = nextToken.getType();
-                switch(type){
-                case SEMICOLON:
-                    return exp;
-                case ADD:
-                case SUB:
-                case MULT:
-                case DIV:
-                    nextToken = nextToken();
-                    return new BinaryExpression(exp, nextToken, parseFactor());
-                default:
-                    return new BinaryExpression(exp, parseRelop(), parseAdditiveExpression());
-                }
+                return parseSimpleExpressionPrime(exp);
             case BEGPAR:
                 exp = parseExpression();
                 nextToken = nextToken();
                 type = nextToken.getType();
                 if(type!=TokenType.ENDPAR)
                     throw new CMinusParserException("Invalid semantics in parseExpression:\nGot "+type.toString()+" instead of )");
-                nextToken = viewNext();
-                type = nextToken.getType();
-                switch(type){
-                    case SEMICOLON:
-                        return exp;
-                    case ADD:
-                    case SUB:
-                    case MULT:
-                    case DIV:
-                        nextToken = nextToken();
-                        return new BinaryExpression(exp, nextToken, parseFactor());
-                    default:
-                        return new BinaryExpression(exp, parseRelop(), parseAdditiveExpression()); 
-                }
+                return parseSimpleExpressionPrime(exp);
             default:
                 throw new CMinusParserException("Invalid semantics in parseExpression:\nGot "+type.toString()+" instead of ID, NUM, or (");
         }
