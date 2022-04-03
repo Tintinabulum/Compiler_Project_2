@@ -15,7 +15,8 @@ public class VarDecl implements Declaration{
     }
     //Print
     @Override
-    public void print(){
+    public void print(int tabs){
+        for(int i=0;i<tabs;i++) System.out.print('\t');
         System.out.print("int ");
         System.out.print(id);
         if(size>-1){

@@ -18,7 +18,8 @@ public class FunDecl implements Declaration{
     }
     //Print
     @Override
-    public void print(){
+    public void print(int tabs){
+        for(int i=0;i<tabs;i++) System.out.print('\t');
         if(voidReturn) System.out.print("void ");
         else System.out.print("int ");
         System.out.print(id);
@@ -32,6 +33,6 @@ public class FunDecl implements Declaration{
             }
         }
         System.out.print(')');
-        statement.print();
+        statement.print(tabs+1);
     }
 }

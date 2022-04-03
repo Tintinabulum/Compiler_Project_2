@@ -5,7 +5,7 @@ public class NumExpression implements Expression {
     private int value;
     
     public NumExpression(int num){
-        num = value;
+        value = num;
     }
 
     public void print(){

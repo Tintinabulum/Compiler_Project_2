@@ -1,5 +1,10 @@
 /* A test program for the CMinusScanner */
 
+void voidFun(void){
+	int x;
+	x = x + x * x * x + x;
+}
+
 int main(void){
     int a;
     int b;
@@ -36,12 +41,13 @@ int main(void){
     }
     /* return 2 if the difference function does not work properly */
     if (diff != difference(a, b)){
-        return 2;
+        return;
     }
+    else if(i < j) return 2;
     /* return 3 if factorial had a negative input */
-    if (fact == 0-1){
+    if (fact == 0-1)
         return 3;
-    }
+    
 
     while (i <= 100){
         i = i + j;

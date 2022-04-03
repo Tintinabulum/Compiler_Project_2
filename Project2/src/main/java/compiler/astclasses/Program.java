@@ -45,7 +45,7 @@ public class Program {
     //Print
     public void print(){
         for(int i=0;i<decls.size();i++){
-            decls.get(i).print();
+            decls.get(i).print(0);
             System.out.println();
         }
     }

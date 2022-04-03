@@ -90,10 +90,10 @@ public class CMinusParser implements Parser{
                             return parseFunDecl(true, data);
                         return parseDeclarationPrime(data);
                     default:
-                        throw new CMinusParserException("Invalid semantics in Declaration:\nGot "+type.toString()+" instead of ID");
+                        throw new CMinusParserException("Invalid syntax in Declaration:\nGot "+type.toString()+" instead of ID");
                 }
             default:
-                throw new CMinusParserException("Invalid semantics in Declaration:\nGot "+type.toString()+" instead of VOID or INT");
+                throw new CMinusParserException("Invalid syntax in Declaration:\nGot "+type.toString()+" instead of VOID or INT");
         }
     }
     private Declaration parseDeclarationPrime(String id){
@@ -111,17 +111,17 @@ public class CMinusParser implements Parser{
                         val = (Integer)(nextToken.getData());
                         break;
                     default:
-                        throw new CMinusParserException("Invalid semantics in Variable Declaration:\nGot "+type.toString()+" instead of NUM");
+                        throw new CMinusParserException("Invalid syntax in Variable Declaration:\nGot "+type.toString()+" instead of NUM");
                 }
                 nextToken = nextToken();
                 type = nextToken.getType();
                 if(type!=TokenType.ENDSBRA)
-                   throw new CMinusParserException("Invalid semantics in Variable Declaration:\nGot "+type.toString()+" instead of ]");
+                   throw new CMinusParserException("Invalid syntax in Variable Declaration:\nGot "+type.toString()+" instead of ]");
                 nextToken = nextToken();
                 type = nextToken.getType();
                 if(type==TokenType.SEMICOLON)
                     return new VarDecl(id,val);
-                throw new CMinusParserException("Invalid semantics in Variable Declaration:\nGot "+type.toString()+" instead of ;");
+                throw new CMinusParserException("Invalid syntax in Variable Declaration:\nGot "+type.toString()+" instead of ;");
             case SEMICOLON:
                 //Consume the ;
                 scan.getNextToken();
@@ -134,7 +134,7 @@ public class CMinusParser implements Parser{
         Token nextToken = nextToken();
         TokenType type = nextToken.getType();
         if(type!=TokenType.BEGPAR)
-            throw new CMinusParserException("Invalid semantics in Function Declaration:\nGot "+type.toString()+" instead of (");
+            throw new CMinusParserException("Invalid syntax in Function Declaration:\nGot "+type.toString()+" instead of (");
         ArrayList<Param> p = null;
         nextToken = viewNext();
         type = nextToken.getType();
@@ -146,7 +146,7 @@ public class CMinusParser implements Parser{
                     nextToken = nextToken();
                     type = nextToken.getType();
                     if(type!=TokenType.COMMA && type!=TokenType.ENDPAR)
-                        throw new CMinusParserException("Invalid semantics in Param-list:\nGot "+type.toString()+" instead of , or )");
+                        throw new CMinusParserException("Invalid syntax in Param-list:\nGot "+type.toString()+" instead of , or )");
                 }
                 break;
             case VOID:
@@ -155,10 +155,10 @@ public class CMinusParser implements Parser{
                 nextToken = nextToken();
                 type = nextToken.getType();
                 if(type!=TokenType.ENDPAR)
-                    throw new CMinusParserException("Invalid semantics in Param-list:\nGot "+type.toString()+" instead of )");
+                    throw new CMinusParserException("Invalid syntax in Param-list:\nGot "+type.toString()+" instead of )");
                 break;
             default:
-                throw new CMinusParserException("Invalid semantics in Param-list:\nGot "+type.toString()+" instead of INT or VOID");
+                throw new CMinusParserException("Invalid syntax in Param-list:\nGot "+type.toString()+" instead of INT or VOID");
         }
         CompoundStatement cs = parseCompoundStatement();
         if(p==null)
@@ -173,11 +173,11 @@ public class CMinusParser implements Parser{
            Token nextToken = nextToken();
            TokenType type = nextToken.getType();
            if(type!=TokenType.INT)
-               throw new CMinusParserException("Invalid semantics in Param:\nGot "+type.toString()+" instead of INT");
+               throw new CMinusParserException("Invalid syntax in Param:\nGot "+type.toString()+" instead of INT");
            nextToken = nextToken();
            type = nextToken.getType();
            if(type!=TokenType.ID)
-               throw new CMinusParserException("Invalid semantics in Param:\nGot "+type.toString()+" instead of ID");
+               throw new CMinusParserException("Invalid syntax in Param:\nGot "+type.toString()+" instead of ID");
            String id = (String)(nextToken.getData());
            nextToken = viewNext();
            type = nextToken.getType();
@@ -187,7 +187,7 @@ public class CMinusParser implements Parser{
                nextToken = nextToken();
                type = nextToken.getType();
                if(type!=TokenType.ENDSBRA)
-                   throw new CMinusParserException("Invalid semantics in Param:\nGot "+type.toString()+" instead of ]");
+                   throw new CMinusParserException("Invalid syntax in Param:\nGot "+type.toString()+" instead of ]");
                return new Param(id, true);
            }
            return new Param(id);
@@ -196,7 +196,7 @@ public class CMinusParser implements Parser{
         Token nextToken = nextToken();
         TokenType type = nextToken.getType();
         if(type!=TokenType.BEGBRA)
-            throw new CMinusParserException("Invalid semantics in CompoundStatement:\nGot "+type.toString()+" instead of {");
+            throw new CMinusParserException("Invalid syntax in CompoundStatement:\nGot "+type.toString()+" instead of {");
         nextToken = viewNext();
         type = nextToken.getType();
         CompoundStatement ret = new CompoundStatement();
@@ -213,7 +213,7 @@ public class CMinusParser implements Parser{
             if(type!=TokenType.BEGBRA && type!=TokenType.IF && type!=TokenType.WHILE &&
                     type!=TokenType.RETURN && type!=TokenType.SEMICOLON && type!=TokenType.ID
                     && type!=TokenType.NUM && type!=TokenType.BEGPAR)
-                throw new CMinusParserException("Invalid semantics in StatementList:\nGot "+type.toString()+" instead of {, IF, WHILE, RETURN, ;, ID, NUM, or (");
+                throw new CMinusParserException("Invalid syntax in StatementList:\nGot "+type.toString()+" instead of {, IF, WHILE, RETURN, ;, ID, NUM, or (");
             ret.addStatement(parseStatement());
             nextToken = viewNext();
             type = nextToken.getType();
@@ -226,7 +226,7 @@ public class CMinusParser implements Parser{
         Token nextToken = nextToken();
         TokenType type = nextToken.getType();
             if(type!=TokenType.ID)
-                throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ID");
+                throw new CMinusParserException("Invalid syntax in Local Declaration:\nGot "+type.toString()+" instead of ID");
             String id = (String)(nextToken.getData());
             nextToken = nextToken();
             type = nextToken.getType();
@@ -234,20 +234,20 @@ public class CMinusParser implements Parser{
                 nextToken = nextToken();
                 type = nextToken.getType();
                 if(type!=TokenType.NUM)
-                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of NUM");
+                    throw new CMinusParserException("Invalid syntax in Local Declaration:\nGot "+type.toString()+" instead of NUM");
                 int num = (Integer)(nextToken.getData());
                 nextToken = nextToken();
                 type = nextToken.getType();
                 if(type!=TokenType.ENDSBRA)
-                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ]");
+                    throw new CMinusParserException("Invalid syntax in Local Declaration:\nGot "+type.toString()+" instead of ]");
                 nextToken = nextToken();
                 type = nextToken.getType();
                 if(type!=TokenType.SEMICOLON)
-                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ;1");
+                    throw new CMinusParserException("Invalid syntax in Local Declaration:\nGot "+type.toString()+" instead of ;1");
                 return new VarDecl(id, num);
             }
             if(type!=TokenType.SEMICOLON)
-                throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ;2");
+                throw new CMinusParserException("Invalid syntax in Local Declaration:\nGot "+type.toString()+" instead of ;2");
             return new VarDecl(id);
     }
     private Statement parseStatement(){
@@ -264,23 +264,23 @@ public class CMinusParser implements Parser{
                 case BEGPAR:
                     return parseExpressionStatement();
                 default:
-                    throw new CMinusParserException("Invalid semantics in Statement:\nGot "+type.toString()+" instead of {, IF, WHILE, RETURN, ;, ID, NUM, or (");                    
+                    throw new CMinusParserException("Invalid syntax in Statement:\nGot "+type.toString()+" instead of {, IF, WHILE, RETURN, ;, ID, NUM, or (");                    
             }
     }
     private SelectionStatement parseSelectionStatement(){
         Token nextToken = nextToken();
         TokenType type = nextToken.getType();
         if(type!=TokenType.IF)
-            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of IF");
+            throw new CMinusParserException("Invalid syntax in SelectionStatement:\nGot "+type.toString()+" instead of IF");
         nextToken = nextToken();
         type = nextToken.getType();
         if(type!=TokenType.BEGPAR)
-            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of (");
+            throw new CMinusParserException("Invalid syntax in SelectionStatement:\nGot "+type.toString()+" instead of (");
         Expression con = parseExpression();
         nextToken = nextToken();
         type = nextToken.getType();
         if(type!=TokenType.ENDPAR)
-            throw new CMinusParserException("Invalid semantics in SelectionStatement:\nGot "+type.toString()+" instead of )");
+            throw new CMinusParserException("Invalid syntax in SelectionStatement:\nGot "+type.toString()+" instead of )");
         Statement ifS = parseStatement();
         nextToken = viewNext();
         type = nextToken.getType();
@@ -294,16 +294,16 @@ public class CMinusParser implements Parser{
         Token nextToken = nextToken();
         TokenType type = nextToken.getType();
         if(type!=TokenType.WHILE)
-            throw new CMinusParserException("Invalid semantics in IterationStatement:\nGot "+type.toString()+" instead of WHILE");
+            throw new CMinusParserException("Invalid syntax in IterationStatement:\nGot "+type.toString()+" instead of WHILE");
         nextToken = nextToken();
         type = nextToken.getType();
         if(type!=TokenType.BEGPAR)
-            throw new CMinusParserException("Invalid semantics in IterationStatement:\nGot "+type.toString()+" instead of (");
+            throw new CMinusParserException("Invalid syntax in IterationStatement:\nGot "+type.toString()+" instead of (");
         Expression con = parseExpression();
         nextToken = nextToken();
         type = nextToken.getType();
         if(type!=TokenType.ENDPAR)
-            throw new CMinusParserException("Invalid semantics in IterationStatement:\nGot "+type.toString()+" instead of )");
+            throw new CMinusParserException("Invalid syntax in IterationStatement:\nGot "+type.toString()+" instead of )");
         Statement whileS = parseStatement();
         return new IterationStatement(con ,whileS);
     }
@@ -311,20 +311,33 @@ public class CMinusParser implements Parser{
         Token nextToken = nextToken();
         TokenType type = nextToken.getType();
         if(type!=TokenType.RETURN)
-            throw new CMinusParserException("Invalid semantics in ReturnStatement:\nGot "+type.toString()+" instead of RETURN");
+            throw new CMinusParserException("Invalid syntax in ReturnStatement:\nGot "+type.toString()+" instead of RETURN");
         nextToken = viewNext();
         type = nextToken.getType();
         if (type!=TokenType.SEMICOLON){
             Expression retVal = parseExpression();
+            //Check to see if it is ;
+            nextToken = nextToken();
+            type = nextToken.getType();
+            if(type!=TokenType.SEMICOLON)
+                throw new CMinusParserException("Invalid syntax in ReturnStatement:\nGot "+type.toString()+" instead of ;");
             return new ReturnStatement(retVal);
         }
+        //Consume ;
+        scan.getNextToken();
         return new ReturnStatement();
     }
     private ExpressionStatement parseExpressionStatement(){
         Token nextToken = viewNext();
         TokenType type = nextToken.getType();
-        if (type!=TokenType.SEMICOLON)
-            return new ExpressionStatement(parseExpression());
+        if (type!=TokenType.SEMICOLON){
+            Expression e = parseExpression();
+            nextToken = nextToken();
+            type = nextToken.getType();
+            if(type!=TokenType.SEMICOLON)
+                throw new CMinusParserException("Invalid syntax in ExpressionStatement:\nGot "+type.toString()+" instead of ;");
+            return new ExpressionStatement(e);
+        }
         //consume ;
         scan.getNextToken();
         return new ExpressionStatement();
@@ -345,10 +358,10 @@ public class CMinusParser implements Parser{
                 nextToken = nextToken();
                 type = nextToken.getType();
                 if(type!=TokenType.ENDPAR)
-                    throw new CMinusParserException("Invalid semantics in parseExpression:\nGot "+type.toString()+" instead of )");
+                    throw new CMinusParserException("Invalid syntax in parseExpression:\nGot "+type.toString()+" instead of )");
                 return parseSimpleExpressionPrime(exp);
             default:
-                throw new CMinusParserException("Invalid semantics in parseExpression:\nGot "+type.toString()+" instead of ID, NUM, or (");
+                throw new CMinusParserException("Invalid syntax in parseExpression:\nGot "+type.toString()+" instead of ID, NUM, or (");
         }
     }
     private Expression parseExpressionPrime(String id){
@@ -366,7 +379,7 @@ public class CMinusParser implements Parser{
                 nextToken = nextToken();
                 type = nextToken.getType();
                 if (type!=TokenType.ENDSBRA)
-                    throw new CMinusParserException("Invalid semantics in parseExpressionPrime:\nGot "+type.toString()+" instead of ]");
+                    throw new CMinusParserException("Invalid syntax in parseExpressionPrime:\nGot "+type.toString()+" instead of ]");
                 nextToken = viewNext();
                 type = nextToken.getType();
                 //parseExpressionPrimePrime
@@ -391,7 +404,7 @@ public class CMinusParser implements Parser{
                     case COMMA:
                         return parseSimpleExpressionPrime(new VarExpression(id,exp));
                     default:
-                        throw new CMinusParserException("Invalid semantics in parseExpressionPrime:\nGot "+type.toString()+" instead of +, -, *, /, >, >=, ==, <, <=, !=, ), ], ;, or ,");
+                        throw new CMinusParserException("Invalid syntax in parseExpressionPrime:\nGot "+type.toString()+" instead of +, -, *, /, >, >=, ==, <, <=, !=, ), ], ;, or ,");
                 }
             case BEGPAR:
                 exp = parseCall(new VarExpression(id));
@@ -412,7 +425,7 @@ public class CMinusParser implements Parser{
             case COMMA:
                 return parseSimpleExpressionPrime(new VarExpression(id));
             default:
-                throw new CMinusParserException("Invalid semantics in parseExpressionPrime:\nGot "+type.toString()+
+                throw new CMinusParserException("Invalid syntax in parseExpressionPrime:\nGot "+type.toString()+
                     " instead of =, [, (, +, -, *, /, >, >=, ==, <, <=, !=, ), ], ;, or ,"); 
         }
     }
@@ -440,38 +453,24 @@ public class CMinusParser implements Parser{
             case COMMA:
                 return lhs;
             default:
-                throw new CMinusParserException("Invalid semantics in parseExpressionPrime:\nGot "+type.toString()+" instead of +, -, *, /, >, >=, ==, <, <=, !=, ), ], ;, or ,"); 
+                throw new CMinusParserException("Invalid syntax in parseExpressionPrime:\nGot "+type.toString()+" instead of +, -, *, /, >, >=, ==, <, <=, !=, ), ], ;, or ,"); 
         }
-    }
-    private CallExpression parseCall(VarExpression vd){
-        Token nextToken = nextToken();
-        TokenType type = nextToken.getType();
-        if(type!=TokenType.BEGPAR)
-            throw new CMinusParserException("Invalid semantics in parseExpressionPrime:\nGot "+type.toString()+" instead of ");
-        CallExpression ce = new CallExpression(vd);
-        nextToken = viewNext();
-        type = nextToken.getType();
-        while (type!=TokenType.ENDPAR){
-            ce.addArgs(parseExpression());
-            nextToken = viewNext();
-            type = nextToken.getType();
-
-            if (type != TokenType.COMMA && type != TokenType.ENDPAR)
-                 throw new CMinusParserException("Invalid semantics in parseCall:\nGot "+type.toString()+" instead of , or )");
-            
-            //Consume the ,
-            scan.getNextToken();
-        }
-        return ce;
     }
     private BinaryExpression parseAdditiveExpression(Expression lhs){
         lhs = parseTerm(lhs);
         Token nextToken = viewNext();
         TokenType type = nextToken.getType();
+        if(type!=TokenType.ADD && type!=TokenType.SUB)
+            return new BinaryExpression(lhs);
+        //Consume the + or -
+        scan.getNextToken();
+        BinaryExpression ret = new BinaryExpression(parseTerm(null),nextToken,lhs);
+        nextToken = viewNext();
+        type = nextToken.getType();
         while(type==TokenType.ADD || type==TokenType.SUB){
             //Consume the + or -
             scan.getNextToken();
-            lhs = new BinaryExpression(lhs, nextToken, parseTerm(null));
+            ret = new BinaryExpression(parseTerm(null), nextToken, ret);
             nextToken = viewNext();
             type = nextToken.getType();
         }
@@ -481,70 +480,84 @@ public class CMinusParser implements Parser{
             case ENDSBRA:
                 break;
             default:
-                throw new CMinusParserException("Invalid semantics in parseAdditiveExpression:\nGot "+type.toString()+" instead of ;, ), or ]");         
+                throw new CMinusParserException("Invalid syntax in parseAdditiveExpression:\nGot "+type.toString()+" instead of ;, ), or ]");         
         }
-        return new BinaryExpression(lhs);
+        return ret;
     }
     private BinaryExpression parseTerm(Expression lhs){
         if(lhs==null)
             lhs = parseFactor();
         Token nextToken = viewNext();
         TokenType type = nextToken.getType();
+        if(type!=TokenType.MULT && type!=TokenType.DIV)
+            return new BinaryExpression(lhs);
+        //Consume the * or /
+        scan.getNextToken();
+        BinaryExpression ret = new BinaryExpression(parseFactor(),nextToken,lhs);
+        nextToken = viewNext();
+        type = nextToken.getType();
         while(type==TokenType.MULT || type==TokenType.DIV){
             //Consume the * or /
             scan.getNextToken();
-            lhs = new BinaryExpression(lhs,nextToken,parseFactor());
+            ret = new BinaryExpression(parseFactor(),nextToken,ret);
             nextToken = viewNext();
             type = nextToken.getType();
         }
-        return new BinaryExpression(lhs);
+        return ret;
     }
 
-    private Expression parseFactor()
-    {
+    private Expression parseFactor(){
         Token nextToken = nextToken();
-
-        switch(nextToken.getType())
-        {
-        case BEGPAR:
-            {
+        switch(nextToken.getType()){
+            case BEGPAR:
                 Expression returnExp = parseExpression();
                 nextToken(); //consume ')'
                 return returnExp;
-            }
-        case NUM:
-            return new NumExpression((int)nextToken.getData());
-
-        case ID: //Handle factor'
-            {
+            case NUM:
+                return new NumExpression((Integer)nextToken.getData());
+            case ID: //Handle factor'
                 Token id = nextToken;
                 nextToken = viewNext();
                 TokenType type = nextToken.getType();
-                
-                if(type == TokenType.BEGSBRA)
-                {
+                if(type == TokenType.BEGSBRA){
                     nextToken = nextToken();
                     Expression expr = parseExpression();
                     if(nextToken.getType() != TokenType.ENDSBRA)
-                        throw new CMinusParserException("Invalid semantics in factor. Got " + nextToken.getType() + " instead of ']'");
-                    
+                        throw new CMinusParserException("Invalid syntax in factor. Got " + nextToken.getType() + " instead of ']'");
                     return new VarExpression((String)id.getData(), expr);
-                }
-                else if(type == TokenType.BEGPAR)
+                }else if(type == TokenType.BEGPAR)
                     return parseCall(new VarExpression((String)id.getData()));
-
                 return new VarExpression((String)id.getData());
-            }
-        default:
-            throw new CMinusParserException("Invalid semantics in factor. Got " + nextToken.getType());
-
+            default:
+                throw new CMinusParserException("Invalid syntax in factor. Got " + nextToken.getType());
         }
+    }
+    private CallExpression parseCall(VarExpression vd){
+        Token nextToken = nextToken();
+        TokenType type = nextToken.getType();
+        if(type!=TokenType.BEGPAR)
+            throw new CMinusParserException("Invalid syntax in parseExpressionPrime:\nGot "+type.toString()+" instead of ");
+        CallExpression ce = new CallExpression(vd);
+        nextToken = viewNext();
+        type = nextToken.getType();
+        while (type!=TokenType.ENDPAR){
+            ce.addArgs(parseExpression());
+            nextToken = viewNext();
+            type = nextToken.getType();
+
+            if (type != TokenType.COMMA && type != TokenType.ENDPAR)
+                 throw new CMinusParserException("Invalid syntax in parseCall:\nGot "+type.toString()+" instead of , or )");
+            
+            //Consume the ,
+            scan.getNextToken();
+        }
+        return ce;
     }
     
     public static void main(String[] args) {
         try{
             BufferedReader r = new BufferedReader(new FileReader(new File("input.txt")));
-            CMinusParser c = new CMinusParser(r, true);
+            CMinusParser c = new CMinusParser(r, false);
             c.parse();
             c.printTree();
         }catch(CMinusScannerException e){

@@ -8,7 +8,7 @@ public class ExpressionStatement implements Statement{
     public ExpressionStatement(Expression e){
         exp = e;
     }
-    public void print(){
+    public void print(int tabs){
         if(exp!=null)
             exp.print();
         System.out.println(';');

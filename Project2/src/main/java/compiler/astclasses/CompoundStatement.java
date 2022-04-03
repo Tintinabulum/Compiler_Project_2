@@ -24,16 +24,17 @@ public class CompoundStatement implements Statement{
         stateList.add(s);
     }
     //Print
-    public void print(){
+    public void print(int tabs){
         System.out.println('{');
         for(VarDecl vd : localDecls){
-            vd.print();
+            vd.print(tabs);
             System.out.println();
         }
         for(Statement s : stateList){
-            s.print();
-            System.out.println();
+            for(int i=0;i<tabs;i++) System.out.print('\t');
+            s.print(tabs);
         }
+        for(int i=1;i<tabs;i++) System.out.print('\t');
         System.out.println('}');
     }
 }

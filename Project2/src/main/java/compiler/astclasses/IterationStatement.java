@@ -7,10 +7,10 @@ public class IterationStatement implements Statement{
         condition = e;
         body = s;
     }
-    public void print(){
+    public void print(int tabs){
         System.out.print("while(");
         condition.print();
         System.out.print(") ");
-        body.print();
+        body.print(tabs+1);
     }
 }

@@ -8,7 +8,7 @@ public class ReturnStatement implements Statement{
     public ReturnStatement(Expression e){
         retExp = e;
     }
-    public void print(){
+    public void print(int tabs){
         System.out.print("return");
         if(retExp!=null){
             System.out.print(' ');
