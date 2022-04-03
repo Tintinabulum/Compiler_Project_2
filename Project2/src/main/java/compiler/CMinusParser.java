@@ -461,6 +461,30 @@ public class CMinusParser implements Parser{
     
     }
 
+    private BinaryExpression parseAdditiveExpressionPrime(Expression lhs)
+    {
+        Token nextToken = viewNext();
+        TokenType type = nextToken.getType();
+        if(type == TokenType.MULT || type == TokenType.DIV)
+            lhs = ParseTermPrime(lhs);
+        
+        nextToken = nextToken();
+        type = nextToken.getType();
+        if(type != TokenType.ADD || type != TokenType.SUB)
+            throw new CMinusParserException("Invalid semantics in BinaryExpression (add)\n Got " + type);
+        
+        BinaryExpression rhs = parseTerm();
+
+        return new BinaryExpression(lhs, nextToken, rhs);
+    }
+
+    private BinaryExpression ParseTermPrime(Expression lhs)
+    {
+        Token op = nextToken();
+        Expression rhs = parseFactor();
+        return new BinaryExpression(lhs, op, rhs);
+    }
+
     private BinaryExpression parseTerm()
     {
         Expression lhs = parseFactor();
@@ -479,19 +503,6 @@ public class CMinusParser implements Parser{
         }
 
         return new BinaryExpression(lhs);
-    }
-
-    private BinaryExpression parseTermPrime()
-    {
-        Token nextToken = viewNext();
-        TokenType type = nextToken.getType();
-        if(type != TokenType.MULT || type != TokenType.DIV)
-            return null;
-
-        Token op = nextToken();
-        Expression rhs = parseFactor();
-
-        return new BinaryExpression(null, op, rhs);
     }
 
     private Expression parseFactor()
