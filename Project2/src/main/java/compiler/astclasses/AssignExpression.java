@@ -1,15 +1,15 @@
 package compiler.astclasses;
 
 public class AssignExpression implements Expression{
-    private Expression leftExp;
-    private Expression rightExp;
-    public AssignExpression(Expression lExp,Expression rExp){
-        leftExp = lExp;
-        rightExp = rExp;
+    private VarExpression var;
+    private Expression exp;
+    public AssignExpression(VarExpression lExp,Expression rExp){
+        var = lExp;
+        exp = rExp;
     }
     public void print(){
-        leftExp.print();
+        var.print();
         System.out.print(" = ");
-        rightExp.print();
+        exp.print();
     }
 }
