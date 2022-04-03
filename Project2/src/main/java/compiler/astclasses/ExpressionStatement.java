@@ -11,6 +11,6 @@ public class ExpressionStatement implements Statement{
     public void print(){
         if(exp!=null)
             exp.print();
-        System.out.println(";");
+        System.out.println(';');
     }
 }

@@ -25,7 +25,7 @@ public class CompoundStatement implements Statement{
     }
     //Print
     public void print(){
-        System.out.println("{");
+        System.out.println('{');
         for(VarDecl vd : localDecls){
             vd.print();
             System.out.println();
@@ -34,6 +34,6 @@ public class CompoundStatement implements Statement{
             s.print();
             System.out.println();
         }
-        System.out.println("}");
+        System.out.println('}');
     }
 }

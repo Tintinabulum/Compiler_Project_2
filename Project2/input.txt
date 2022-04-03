@@ -21,7 +21,9 @@ int main(void){
     diff = a - b;
     prod = c * b;
     quot = b / a;
+
     sum = diff + prod + quot;
+    a = b - c * sum / diff + prod; 
 
     i = 1;
     j = 1;

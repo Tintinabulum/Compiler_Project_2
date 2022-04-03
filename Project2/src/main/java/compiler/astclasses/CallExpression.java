@@ -16,13 +16,13 @@ public class CallExpression implements Expression{
     
     public void print(){
         varExp.print();
-        System.out.print("(");
+        System.out.print('(');
         for (int i = 0; i < args.size(); i++){
             if (i != 0)
                 System.out.print(", ");
             args.get(i).print();
         }
         //logic for going through the args;
-        System.out.print(")");
+        System.out.print(')');
     }
 }
