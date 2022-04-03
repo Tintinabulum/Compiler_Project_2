@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import java.io.FileReader;
 import java.io.File;
+import java.io.IOException;
 
 import compiler.Token.TokenType;
 import compiler.astclasses.*;
@@ -223,11 +224,11 @@ public class CMinusParser implements Parser{
                 nextToken = nextToken();
                 type = nextToken.getType();
                 if(type!=TokenType.SEMICOLON)
-                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ;");
+                    throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ;1");
                 return new VarDecl(id, num);
             }
             if(type!=TokenType.SEMICOLON)
-                throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ;");
+                throw new CMinusParserException("Invalid semantics in Local Declaration:\nGot "+type.toString()+" instead of ;2");
             return new VarDecl(id);
     }
     private Statement parseStatement(){
@@ -317,7 +318,8 @@ public class CMinusParser implements Parser{
             case ID:
                 return parseExpressionPrime((String)(nextToken.getData()));
             case NUM:
-                exp = new NumExpression((int)nextToken.getData());
+                Integer v = (Integer)nextToken.getData();
+                exp = new NumExpression(v);
                 return parseSimpleExpressionPrime(exp);
             case BEGPAR:
                 exp = parseExpression();
@@ -561,8 +563,8 @@ public class CMinusParser implements Parser{
         }catch(CMinusParserException e){
             System.out.println("Parser Error: ");
             System.out.println(e);
-        }catch(Exception e){
-            System.out.println("Other Error: ");
+        }catch(IOException e){
+            System.out.println("IO Error: ");
             System.out.println(e);
         }
     }
