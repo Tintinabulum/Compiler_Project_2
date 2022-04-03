@@ -579,7 +579,7 @@ public class CMinusParser implements Parser{
     
     public static void main(String[] args) {
         try{
-            BufferedReader r = new BufferedReader(new FileReader(new File("input.txt")));
+            BufferedReader r = new BufferedReader(new FileReader(new File("SyntaxError1 - Copy - Copy.txt")));
             CMinusParser c = new CMinusParser(r, false);
             c.parse();
             c.printTree();

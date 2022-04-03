@@ -1,0 +1,8 @@
+void wrong(int i){
+	int n;
+	n = i ** 2;
+}
+/*Error:
+Parser Error: 
+compiler.CMinusParserException: Invalid syntax in factor. Got MULT
+*/

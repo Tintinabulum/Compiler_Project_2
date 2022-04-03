@@ -1,0 +1,7 @@
+int wrong(int i){
+	i++;
+}
+/*Error:
+Parser Error: 
+compiler.CMinusParserException: Invalid syntax in factor. Got ADD
+*/
