@@ -15,7 +15,7 @@ int main(void){
 
     a = 20;
     b = 23;
-    c = 8
+    c = 8;
     
     sum = a + b;
     diff = a - b;

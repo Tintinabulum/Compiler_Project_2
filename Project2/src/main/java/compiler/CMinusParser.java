@@ -36,12 +36,16 @@ public class CMinusParser implements Parser{
         Token t = scan.getNextToken();
         if(t.getType()==TokenType.ERROR)
             throw new CMinusScannerException("Invalid syntax: "+(String)(t.getData()));
+        if(t.getType()==TokenType.ID)
+            System.out.println("ID: "+(String)(t.getData()));
+        else System.out.println(t.getType());
         return t;
     }
     private Token viewNext(){
         Token t = scan.viewNextToken();
         if(t.getType()==TokenType.ERROR)
             throw new CMinusScannerException("Invalid syntax: "+(String)(t.getData()));
+        System.out.println("\t"+t.getType());
         return t;
     }
     private Program parseProgram(){
@@ -449,21 +453,15 @@ public class CMinusParser implements Parser{
     {
         BinaryExpression lhs = parseTerm(null);
         Token nextToken = viewNext();
-
-        if(nextToken.getType() == TokenType.ADD || nextToken.getType() == TokenType.SUB)
-        {
+        if(nextToken.getType() == TokenType.ADD || nextToken.getType() == TokenType.SUB){
             Token op = nextToken();
             nextToken = viewNext();
             if(nextToken.getType() != TokenType.BEGPAR && nextToken.getType() != TokenType.NUM && nextToken.getType() != TokenType.ID)
-                throw new CMinusParserException("Invalid semantics in BinaryExpression (add)\n. Got " + nextToken.getType());
-            
-            BinaryExpression rhs = parseTerm(null);
-
+                throw new CMinusParserException("Invalid semantics in BinaryExpression (add)\n. Got " + nextToken.getType() + " expected (, NUM, or ID");
+            BinaryExpression rhs = parseTerm();
             return new BinaryExpression(lhs, op, rhs);
         }
-
         return new BinaryExpression(lhs);
-    
     }
 
     private BinaryExpression parseAdditiveExpressionPrime(Expression lhs)
@@ -475,9 +473,8 @@ public class CMinusParser implements Parser{
         
         nextToken = nextToken();
         type = nextToken.getType();
-        if(type != TokenType.ADD || type != TokenType.SUB)
-            throw new CMinusParserException("Invalid semantics in BinaryExpression (add)\n Got " + type + 
-                ". Expected '+' or '-'");
+        if(type != TokenType.ADD && type != TokenType.SUB)
+            throw new CMinusParserException("Invalid semantics in BinaryExpression (add')\n Got " + type + " expected + or -");
         
         BinaryExpression rhs = parseTerm(null);
 
