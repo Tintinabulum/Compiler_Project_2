@@ -2,30 +2,24 @@ package compiler.astclasses;
 
 public class VarExpression implements Expression 
 {
-    private String id;
-    private Expression sel; 
+    String id;
 
-    public VarExpression(String ident, Expression selector)
+    public VarExpression(String idName)
     {
-        id = ident;
-        sel = selector;
+        id = idName;
     }
     
-    public VarExpression(String ident)
+    public VarExpression()
     {
-        id = ident;
-        sel = null;
+        this(null);
     }
     
     @Override
     public void print()
     {
-        System.out.print(id);
-        if(sel != null)
+        if(id != null)
         {
-            System.out.print('[');
-            sel.print();
-            System.out.println("];");
+            System.out.print(id);
         }
     }
     
