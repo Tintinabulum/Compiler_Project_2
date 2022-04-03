@@ -28,7 +28,7 @@ public class BinaryExpression implements Expression
         leftExp.print();
         if(op != null && rightExp != null)
         {
-            System.out.print(" " + op + " ");
+            System.out.print(" " + op.getType() + " ");
             rightExp.print();
         }
     }   

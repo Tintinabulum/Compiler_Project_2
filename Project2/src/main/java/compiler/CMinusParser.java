@@ -14,13 +14,21 @@ public class CMinusParser implements Parser{
     //Private variables
     private CMinusScanner scan;
     private Program root;
+    private boolean debug;
     //Constructors
     public CMinusParser(BufferedReader r){
         this(new CMinusScanner(r));
     }
+    public CMinusParser(BufferedReader r,boolean debugMode){
+        this(new CMinusScanner(r),debugMode);
+    }
     public CMinusParser(CMinusScanner c){
+        this(c, false);
+    }
+    public CMinusParser(CMinusScanner c,boolean debugMode){
         scan = c;
         root = null;
+        debug = debugMode;
     }
     //Print
     public void printTree(){
@@ -36,16 +44,19 @@ public class CMinusParser implements Parser{
         Token t = scan.getNextToken();
         if(t.getType()==TokenType.ERROR)
             throw new CMinusScannerException("Invalid syntax: "+(String)(t.getData()));
-        if(t.getType()==TokenType.ID)
-            System.out.println("ID: "+(String)(t.getData()));
-        else System.out.println(t.getType());
+        if(debug){
+            if(t.getType()==TokenType.ID)
+                System.out.println("ID: "+(String)(t.getData()));
+            else System.out.println(t.getType());
+        }
         return t;
     }
     private Token viewNext(){
         Token t = scan.viewNextToken();
         if(t.getType()==TokenType.ERROR)
             throw new CMinusScannerException("Invalid syntax: "+(String)(t.getData()));
-        System.out.println("\t"+t.getType());
+        if(debug)
+            System.out.println("\t"+t.getType());
         return t;
     }
     private Program parseProgram(){
