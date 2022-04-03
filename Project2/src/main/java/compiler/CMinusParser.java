@@ -316,5 +316,47 @@ public class CMinusParser implements Parser{
         }
         return null;
     }
+
+    private BinaryExpression parseAdditiveExpression()
+    {
+        BinaryExpression lhs = parseTerm();
+        Token nextToken = viewNext();
+
+        if(nextToken.getType() == TokenType.ADD || nextToken.getType() == TokenType.SUB)
+        {
+            Token op = nextToken();
+            nextToken = viewNext();
+            if(nextToken.getType() != TokenType.BEGPAR && nextToken.getType() != TokenType.NUM && nextToken.getType() != TokenType.ID)
+                throw new CMinusParserException("Invalid semantics in BinaryExpression (add)\n. Got " + nextToken.getType());
+            
+            BinaryExpression rhs = parseTerm();
+
+            return new BinaryExpression(lhs, op, rhs);
+        }
+
+        //Language grammer makes this legal, but should never get called
+        return new BinaryExpression(lhs);
+    
+    }
+
+    private BinaryExpression parseTerm()
+    {
+        BinaryExpression lhs = parseTerm();
+        Token nextToken = viewNext();
+
+        if(nextToken.getType() == TokenType.MULT || nextToken.getType() == TokenType.DIV)
+        {
+            Token op = nextToken();
+            nextToken = viewNext();
+            if(nextToken.getType() != TokenType.BEGPAR && nextToken.getType() != TokenType.NUM && nextToken.getType() != TokenType.ID)
+                throw new CMinusParserException("Invalid semantics in BinaryExpression (mult)\n. Got " + nextToken.getType());
+            
+            BinaryExpression rhs = parseTerm();
+
+            return new BinaryExpression(lhs, op, rhs);
+        }
+
+        return new BinaryExpression(lhs);
+    }
     
 }
