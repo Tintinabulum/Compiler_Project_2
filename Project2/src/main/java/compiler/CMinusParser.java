@@ -447,7 +447,7 @@ public class CMinusParser implements Parser{
     }
     private BinaryExpression parseAdditiveExpression()
     {
-        BinaryExpression lhs = parseTerm();
+        BinaryExpression lhs = parseTerm(null);
         Token nextToken = viewNext();
 
         if(nextToken.getType() == TokenType.ADD || nextToken.getType() == TokenType.SUB)
@@ -457,7 +457,7 @@ public class CMinusParser implements Parser{
             if(nextToken.getType() != TokenType.BEGPAR && nextToken.getType() != TokenType.NUM && nextToken.getType() != TokenType.ID)
                 throw new CMinusParserException("Invalid semantics in BinaryExpression (add)\n. Got " + nextToken.getType());
             
-            BinaryExpression rhs = parseTerm();
+            BinaryExpression rhs = parseTerm(null);
 
             return new BinaryExpression(lhs, op, rhs);
         }
@@ -471,7 +471,7 @@ public class CMinusParser implements Parser{
         Token nextToken = viewNext();
         TokenType type = nextToken.getType();
         if(type == TokenType.MULT || type == TokenType.DIV)
-            lhs = ParseTermPrime(lhs);
+            lhs = parseTerm(lhs);
         
         nextToken = nextToken();
         type = nextToken.getType();
@@ -479,21 +479,15 @@ public class CMinusParser implements Parser{
             throw new CMinusParserException("Invalid semantics in BinaryExpression (add)\n Got " + type + 
                 ". Expected '+' or '-'");
         
-        BinaryExpression rhs = parseTerm();
+        BinaryExpression rhs = parseTerm(null);
 
         return new BinaryExpression(lhs, nextToken, rhs);
     }
 
-    private BinaryExpression ParseTermPrime(Expression lhs)
+    private BinaryExpression parseTerm(Expression lhs)
     {
-        Token op = nextToken();
-        Expression rhs = parseFactor();
-        return new BinaryExpression(lhs, op, rhs);
-    }
-
-    private BinaryExpression parseTerm()
-    {
-        Expression lhs = parseFactor();
+        if(lhs == null)
+            lhs = parseFactor();
         Token nextToken = viewNext();
 
         if(nextToken.getType() == TokenType.MULT || nextToken.getType() == TokenType.DIV)
