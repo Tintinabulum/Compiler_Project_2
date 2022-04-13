@@ -7,9 +7,10 @@ public class AssignExpression implements Expression{
         var = lExp;
         exp = rExp;
     }
-    public void print(){
-        var.print();
-        System.out.print(" = ");
-        exp.print();
+    public void print(int tabs){
+        var.print(tabs+1);
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println(" = ");
+        exp.print(tabs+1);
     }
 }

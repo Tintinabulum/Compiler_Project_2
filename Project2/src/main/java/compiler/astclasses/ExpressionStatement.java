@@ -10,7 +10,8 @@ public class ExpressionStatement implements Statement{
     }
     public void print(int tabs){
         if(exp!=null)
-            exp.print();
+            exp.print(tabs+1);
+        for(int i=0;i<tabs;i++) System.out.print('\t');
         System.out.println(';');
     }
 }

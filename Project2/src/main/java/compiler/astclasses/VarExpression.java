@@ -17,14 +17,17 @@ public class VarExpression implements Expression
     }
     
     @Override
-    public void print()
+    public void print(int tabs)
     {
-        System.out.print(id);
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println(id);
         if(arrayselect != null)
         {
-            System.out.print('[');
-            arrayselect.print();
-            System.out.print(']');
+            for(int i=0;i<tabs;i++) System.out.print('\t');
+            System.out.println('[');
+            arrayselect.print(tabs+1);
+            for(int i=0;i<tabs;i++) System.out.print('\t');
+            System.out.println(']');
         }
     }
     

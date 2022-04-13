@@ -8,7 +8,8 @@ public class NumExpression implements Expression {
         value = num;
     }
 
-    public void print(){
-        System.out.print(value);
+    public void print(int tabs){
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println(value);
     }
 }

@@ -9,11 +9,12 @@ public class ReturnStatement implements Statement{
         retExp = e;
     }
     public void print(int tabs){
-        System.out.print("return");
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println("return");
         if(retExp!=null){
-            System.out.print(' ');
-            retExp.print();
+            retExp.print(tabs+1);
         }
+        for(int i=0;i<tabs;i++) System.out.print('\t');
         System.out.println(';');
     }
 }

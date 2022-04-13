@@ -14,22 +14,23 @@ public class BinaryExpression implements Expression
         leftExp = ls;
         op = operation;
         rightExp = rs;
-    }
+    }/*
     public BinaryExpression(Expression ls)
     {
         leftExp = ls;
         op = null;
         rightExp = null;
-    }
+    }*/
 
     @Override
-    public void print()
+    public void print(int tabs)
     {
-        leftExp.print();
-        if(op != null && rightExp != null)
-        {
-            System.out.print(" " + op.getType() + " ");
-            rightExp.print();
-        }
+        leftExp.print(tabs+1);
+        //if(op != null && rightExp != null)
+       // {
+            for(int i=0;i<tabs;i++) System.out.print('\t');
+            System.out.println(op.getType());
+            rightExp.print(tabs+1);
+        //}
     }   
 }

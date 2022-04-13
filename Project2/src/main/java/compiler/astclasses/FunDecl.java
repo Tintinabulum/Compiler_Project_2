@@ -20,19 +20,25 @@ public class FunDecl implements Declaration{
     @Override
     public void print(int tabs){
         for(int i=0;i<tabs;i++) System.out.print('\t');
-        if(voidReturn) System.out.print("void ");
-        else System.out.print("int ");
-        System.out.print(id);
-        System.out.print('(');
-        if(params==null) System.out.print("void");
-        else{
-            params[0].print();
+        if(voidReturn) System.out.println("void");
+        else System.out.println("int");
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println(id);
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println('(');
+        if(params==null){
+            for(int i=0;i<tabs;i++) System.out.print('\t');
+            System.out.print("void");
+        }else{
+            params[0].print(tabs+1);
             for(int i=1; i<params.length; i++){
-                System.out.print(", ");
-                params[1].print();
+                for(int j=0;j<tabs;j++) System.out.print('\t');
+                System.out.println(',');
+                params[i].print(tabs+1);
             }
         }
-        System.out.print(')');
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println(')');
         statement.print(tabs+1);
     }
 }

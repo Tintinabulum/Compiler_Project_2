@@ -14,15 +14,20 @@ public class CallExpression implements Expression{
         args.add(e);
     }
     
-    public void print(){
-        varExp.print();
-        System.out.print('(');
+    public void print(int tabs){
+        varExp.print(tabs+1);
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println('(');
         for (int i = 0; i < args.size(); i++){
-            if (i != 0)
-                System.out.print(", ");
-            args.get(i).print();
+            if (i != 0){
+                for(int j=0;j<tabs;j++)
+                    System.out.print('\t');
+                System.out.println(',');
+            }
+            args.get(i).print(tabs+1);
         }
         //logic for going through the args;
-        System.out.print(')');
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println(')');
     }
 }

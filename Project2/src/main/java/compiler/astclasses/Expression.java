@@ -1,5 +1,5 @@
 package compiler.astclasses;
 
 public interface Expression {
-    public void print();
+    public void print(int tabs);
 }

@@ -17,13 +17,18 @@ public class VarDecl implements Declaration{
     @Override
     public void print(int tabs){
         for(int i=0;i<tabs;i++) System.out.print('\t');
-        System.out.print("int ");
-        System.out.print(id);
+        System.out.println("int");
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println(id);
         if(size>-1){
-            System.out.print('[');
-            System.out.print(size);
-            System.out.print(']');
+            for(int i=0;i<tabs;i++) System.out.print('\t');
+            System.out.println('[');
+            for(int i=0;i<tabs;i++) System.out.print('\t');
+            System.out.println(size);
+            for(int i=0;i<tabs;i++) System.out.print('\t');
+            System.out.println(']');
         }
-        System.out.print(';');
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println(';');
     }
 }

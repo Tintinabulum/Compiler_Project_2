@@ -26,13 +26,17 @@ public class SelectionStatement implements Statement{
     public void setElse(Statement s){elseStatement = s;}
     //Print
     public void print(int tabs){
-        System.out.print("if(");
-        ifExpression.print();
-        System.out.print(") ");
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println("if");
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println('(');
+        ifExpression.print(tabs+1);
+        for(int i=0;i<tabs;i++) System.out.print('\t');
+        System.out.println(')');
         ifStatement.print(tabs+1);
         if(elseStatement!=null){
             for(int i=0;i<tabs;i++) System.out.print('\t');
-            System.out.print("else ");
+            System.out.println("else");
             elseStatement.print(tabs+1);
         }
     }

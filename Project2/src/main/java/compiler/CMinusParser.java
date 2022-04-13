@@ -429,7 +429,7 @@ public class CMinusParser implements Parser{
                     " instead of =, [, (, +, -, *, /, >, >=, ==, <, <=, !=, ), ], ;, or ,"); 
         }
     }
-    private BinaryExpression parseSimpleExpressionPrime(Expression lhs){
+    private Expression parseSimpleExpressionPrime(Expression lhs){
         Token nextToken = viewNext();
         TokenType type = nextToken.getType();
         switch(type){
@@ -451,7 +451,7 @@ public class CMinusParser implements Parser{
                         Token t = scan.getNextToken();
                         return new BinaryExpression(lhs,t,parseAdditiveExpression(null));
                     default:
-                        return new BinaryExpression(lhs);
+                        return lhs;
                 }
             case GRE:
             case GREEQU:
@@ -466,26 +466,21 @@ public class CMinusParser implements Parser{
             case ENDPAR:
             case ENDSBRA:
             case COMMA:
-                return new BinaryExpression(lhs);
+                return lhs;
             default:
                 throw new CMinusParserException("Invalid syntax in parseExpressionPrime:\nGot "+type.toString()+" instead of +, -, *, /, >, >=, ==, <, <=, !=, ), ], ;, or ,"); 
         }
     }
-    private BinaryExpression parseAdditiveExpression(Expression lhs){
+    private Expression parseAdditiveExpression(Expression lhs){
         lhs = parseTerm(lhs);
         Token nextToken = viewNext();
         TokenType type = nextToken.getType();
         if(type!=TokenType.ADD && type!=TokenType.SUB)
-            return new BinaryExpression(lhs);
-        //Consume the + or -
-        scan.getNextToken();
-        BinaryExpression ret = new BinaryExpression(lhs,nextToken,parseTerm(null));
-        nextToken = viewNext();
-        type = nextToken.getType();
+            return lhs;
         while(type==TokenType.ADD || type==TokenType.SUB){
             //Consume the + or -
             scan.getNextToken();
-            ret = new BinaryExpression(ret, nextToken, parseTerm(null));
+            lhs = new BinaryExpression(lhs, nextToken, parseTerm(null));
             nextToken = viewNext();
             type = nextToken.getType();
         }
@@ -503,28 +498,23 @@ public class CMinusParser implements Parser{
             default:
                 throw new CMinusParserException("Invalid syntax in parseAdditiveExpression:\nGot "+type.toString()+" instead of ;, ), or ]");         
         }
-        return ret;
+        return lhs;
     }
-    private BinaryExpression parseTerm(Expression lhs){
+    private Expression parseTerm(Expression lhs){
         if(lhs==null)
             lhs = parseFactor();
         Token nextToken = viewNext();
         TokenType type = nextToken.getType();
         if(type!=TokenType.MULT && type!=TokenType.DIV)
-            return new BinaryExpression(lhs);
-        //Consume the * or /
-        scan.getNextToken();
-        BinaryExpression ret = new BinaryExpression(lhs,nextToken,parseFactor());
-        nextToken = viewNext();
-        type = nextToken.getType();
+            return lhs;
         while(type==TokenType.MULT || type==TokenType.DIV){
             //Consume the * or /
             scan.getNextToken();
-            ret = new BinaryExpression(ret,nextToken,parseFactor());
+            lhs = new BinaryExpression(lhs,nextToken,parseFactor());
             nextToken = viewNext();
             type = nextToken.getType();
         }
-        return ret;
+        return lhs;
     }
 
     private Expression parseFactor(){
@@ -579,7 +569,7 @@ public class CMinusParser implements Parser{
     
     public static void main(String[] args) {
         try{
-            BufferedReader r = new BufferedReader(new FileReader(new File("SyntaxError1 - Copy - Copy.txt")));
+            BufferedReader r = new BufferedReader(new FileReader(new File("input.txt")));
             CMinusParser c = new CMinusParser(r, false);
             c.parse();
             c.printTree();

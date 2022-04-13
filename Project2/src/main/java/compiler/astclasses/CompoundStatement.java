@@ -27,12 +27,12 @@ public class CompoundStatement implements Statement{
     public void print(int tabs){
         System.out.println('{');
         for(VarDecl vd : localDecls){
-            vd.print(tabs);
+            vd.print(tabs+1);
             System.out.println();
         }
         for(Statement s : stateList){
             for(int i=0;i<tabs;i++) System.out.print('\t');
-            s.print(tabs);
+            s.print(tabs+1);
         }
         for(int i=1;i<tabs;i++) System.out.print('\t');
         System.out.println('}');
